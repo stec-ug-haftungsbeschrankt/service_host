@@ -1,0 +1,12 @@
+[package]
+name = "service_host"
+authors = ["Stefan Schick <stefan.schick@stecug.de>"]
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+log = "0.4.16"
+tokio = { version = "1.17.0", features = ["sync"] }
+simple_logger = "2.1.0"
