@@ -4,7 +4,7 @@ use tokio::sync::broadcast;
 use tokio::sync::broadcast::{Receiver, Sender};
 //use tokio::task::JoinHandle;
 use std::thread::JoinHandle;
-use crate::worker::Worker;
+use crate::worker::WorkerService;
 
 #[derive(Debug, PartialEq, Copy, Clone)]
 pub enum LifecycleEvent {
@@ -19,7 +19,7 @@ impl fmt::Display for LifecycleEvent {
 
 
 pub struct ServiceHost {
-    workers: Vec<Worker>,
+    workers: Vec<Box<dyn WorkerService>>,
     thread_handles: Vec<JoinHandle<()>>,
     tx: Sender<LifecycleEvent>
 }
@@ -31,7 +31,7 @@ impl ServiceHost {
         ServiceHost { workers: Vec::new(), thread_handles: Vec::new(), tx }
     }
 
-    pub fn add_worker(mut self, worker: Worker) -> Self {
+    pub fn add_worker(mut self, worker: Box<dyn WorkerService>) -> Self {
         self.workers.push(worker);
         self
     }
@@ -63,6 +63,6 @@ impl ServiceHost {
 
     pub fn trigger_lifecycle_event(&self, event: &LifecycleEvent) {
         info!("Sending Lifecycle Event {:?}", event);
-        self.tx.send(LifecycleEvent::Cancel);
+        let _ = self.tx.send(LifecycleEvent::Cancel);
     }
 }

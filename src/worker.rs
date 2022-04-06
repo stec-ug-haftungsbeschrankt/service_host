@@ -11,12 +11,23 @@ pub struct Worker {
 unsafe impl Send for Worker {}
 unsafe impl Sync for Worker {}
 
+
+pub trait WorkerService  where Self: Send + Sync {
+    fn init_lifecycle(&mut self, rx: Receiver<LifecycleEvent>);
+
+    fn handle_lifecycle_events(&mut self) -> Option<LifecycleEvent>;
+
+    fn execute(&mut self);
+}
+
 impl Worker {
     pub fn new() -> Self {
         Worker { receiver: None }
     }
+}
 
-    pub fn init_lifecycle(&mut self, rx: Receiver<LifecycleEvent>) {
+impl WorkerService for Worker {
+    fn init_lifecycle(&mut self, rx: Receiver<LifecycleEvent>) {
         self.receiver = Some(rx);
     }
 
@@ -29,7 +40,7 @@ impl Worker {
         None
     }
 
-    pub fn execute(&mut self) {
+    fn execute(&mut self) {
         loop {
             if let Some(message) = self.handle_lifecycle_events() {
                 if message == LifecycleEvent::Cancel {

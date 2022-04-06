@@ -1,5 +1,5 @@
-mod service_host;
-mod worker;
+pub mod service_host;
+pub mod worker;
 
 
 
@@ -22,8 +22,8 @@ mod tests {
     fn instantiate_service_host() {
         SimpleLogger::new().init().unwrap();
 
-        let worker_a = Worker::new();
-        let worker_b = Worker::new();
+        let worker_a = Box::new(Worker::new());
+        let worker_b = Box::new(Worker::new());
 
         let mut host = ServiceHost::new()
             .add_worker(worker_a)
