@@ -1,6 +1,8 @@
 [package]
 name = "service_host"
+description = "A way to host multiple independent services within a single binary, similar to C# .net core service hosting model"
 authors = ["Stefan Schick <stefan.schick@stecug.de>"]
+license = "MIT"
 version = "0.1.0"
 edition = "2021"
 
