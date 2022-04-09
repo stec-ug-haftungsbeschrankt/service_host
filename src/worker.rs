@@ -26,6 +26,12 @@ impl Worker {
     }
 }
 
+impl Default for Worker {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl WorkerService for Worker {
     fn init_lifecycle(&mut self, rx: Receiver<LifecycleEvent>) {
         self.receiver = Some(rx);

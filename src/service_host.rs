@@ -24,6 +24,11 @@ pub struct ServiceHost {
     tx: Sender<LifecycleEvent>
 }
 
+impl Default for ServiceHost {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 
 impl ServiceHost {
     pub fn new() -> Self {
