@@ -18,8 +18,8 @@ mod tests {
         assert_eq!(result, 4);
     }
 
-    #[test]
-    fn instantiate_service_host() {
+    #[tokio::test]
+    async fn instantiate_service_host() {
         SimpleLogger::new().init().unwrap();
 
         let worker_a = Box::new(Worker::new());
@@ -38,6 +38,6 @@ mod tests {
 
 
         info!("Finished");
-        host.wait_for_worker_exit();
+        host.wait_for_worker_exit().await;
     }
 }

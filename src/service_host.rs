@@ -2,8 +2,9 @@ use std::{fmt, thread};
 use log::info;
 use tokio::sync::broadcast;
 use tokio::sync::broadcast::{Receiver, Sender};
-//use tokio::task::JoinHandle;
-use std::thread::JoinHandle;
+use tokio::runtime::Runtime;
+use tokio::task::JoinHandle;
+//use std::thread::JoinHandle;
 use crate::worker::WorkerService;
 
 #[derive(Debug, PartialEq, Copy, Clone)]
@@ -45,23 +46,26 @@ impl ServiceHost {
         while let Some(mut worker)  = self.workers.pop() {
             worker.init_lifecycle(self.tx.subscribe());
 
+            /*
             let handle = thread::spawn(move ||
                 worker.execute()
             );
-            /*
+            */
+
             let handle = tokio::spawn(async move {
                 worker.execute().await;
             });
-            */
+
             self.thread_handles.push(handle);
         }
         self
     }
 
-    pub fn wait_for_worker_exit(&mut self) {
+    pub async fn wait_for_worker_exit(&mut self) {
         info!("Waiting for workers to exit");
         while let Some(handle)  = self.thread_handles.pop() {
-            handle.join().expect("oops! the child thread panicked");
+            //handle.join().expect("oops! the child thread panicked");
+            handle.await;
         }
         info!("All workers finished");
     }

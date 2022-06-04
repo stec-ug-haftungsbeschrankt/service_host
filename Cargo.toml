@@ -3,12 +3,13 @@ name = "service_host"
 description = "A way to host multiple independent services within a single binary, similar to C# .net core service hosting model"
 authors = ["Stefan Schick <stefan.schick@stecug.de>"]
 license = "MIT"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 log = "0.4.16"
-tokio = { version = "1.17.0", features = ["sync"] }
+tokio = { version = "1.19.0", features = ["macros", "sync", "rt-multi-thread"] }
+async-trait = "0.1.56"
 simple_logger = "2.1.0"
